@@ -87,6 +87,12 @@ function setupAdminHandlerRoutes($router) {
                     $siteupdate = $pdo->prepare("UPDATE config SET register_enabled = :regenabled");
                     $siteupdate->bindParam(':regenabled', $regenabled, PDO::PARAM_STR);
                     $siteupdate->execute();
+                    $logging = new logging();
+                    if($regenabled == 1){
+                        $logging->logwebhook("Register has been opened!");
+                    } elseif($regenabled == 0){
+                        $logging->logwebhook("Register has been closed.");
+                    }
                     header("Location: /admin/site-config");
                 }
                 
