@@ -24,8 +24,6 @@ $pagebuilder->buildheader();
         $getkeys = $pdo->query("SELECT * FROM refers");
         $allkeys = $getkeys->fetchAll();
         
-        var_dump($allkeys);    
-        
         foreach ($allkeys as $key) { ?>
         <tr>
             <td><?=$key["refername"]?></td>
