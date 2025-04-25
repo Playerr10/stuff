@@ -16,7 +16,7 @@
         /* else isnt really required but I like how it looks */
         $gameinfo = $gamefetch->fetch(PDO::FETCH_ASSOC);
         $pagebuilder->set_page_name($gameinfo["title"]);
-        $pagebuilder->addresource('cssfiles', '/assets/css/game.css?t='. time());
+        $pagebuilder->addresource('cssfiles', '/assets/css/game.css');
         $pagebuilder->addmetatag("og:title", $gameinfo["title"]);
         $pagebuilder->addmetatag("og:description", $gameinfo["description"]);
         $pagebuilder->addmetatag("og:image", "https://watrbx.xyz/api/get-thumb?assetid=".$gameinfo["placeid"]."&dimensions=1024x1024");

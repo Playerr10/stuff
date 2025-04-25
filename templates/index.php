@@ -6,11 +6,11 @@
     $auth = new authentication;
     $pagebuilder = new pagebuilder;
     $pagebuilder->set_page_name("Landing");
-    $pagebuilder->addresource('cssfiles', '/assets/css/index.css?t='. time());
+    $pagebuilder->addresource('cssfiles', '/assets/css/index.css');
     $pagebuilder->buildheader();
     $auth->requireguest();
     
-    if(isset($_GET["refer"])){
+    if(isset($_GET["refer"]) && !isset($_COOKIE["refer"])){
         $referid = $_GET["refer"];
         
         include(baseurl . "/conn.php");
@@ -23,8 +23,8 @@
     
             $newrefers = $referdata["visits"] + 1;
             
-            $updaterefers = $pdo->prepare("UPDATE refers SET visits = ?");
-            $updaterefers->execute([$newrefers]);
+            $updaterefers = $pdo->prepare("UPDATE refers SET visits = ? WHERE refername = ?");
+            $updaterefers->execute([$newrefers, $referid]);
             
             setcookie("referer", $referid, time() + 8600);
         }

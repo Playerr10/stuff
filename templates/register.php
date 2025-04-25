@@ -9,7 +9,7 @@
     $auth = new authentication;
     $auth->requireguest();
     $pagebuilder->set_page_name("Register");
-    $pagebuilder->addresource('cssfiles', '/assets/loginreq.css?t='. time());
+    $pagebuilder->addresource('cssfiles', '/assets/loginreq.css');
     $pagebuilder->addresource('jsfiles', 'https://challenges.cloudflare.com/turnstile/v0/api.js');
     $pagebuilder->buildheader();
     //$sitefunc->get_message();

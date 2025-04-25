@@ -58,7 +58,7 @@ class pagebuilder {
             $this->addmetatag("og:description", project_description);
         }
         
-        $this->addresource('cssfiles', '/assets/base.css?t='. time());
+        $this->addresource('cssfiles', '/assets/base.css');
         
         // this HAS to be expanded in the future 
         $this->get_snippet('header', [

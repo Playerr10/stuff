@@ -33,6 +33,51 @@ function setupWebHandlerRoutes($router) {
                 include("../templates/index.php");
         });
 
+        $router->get('/account/reactivate', function() {
+            if(isset($_GET["banid"])){
+
+                $banid = $_GET["banid"];
+
+                include(baseurl . "/conn.php");
+
+                $getban = $pdo->prepare("SELECT * FROM bans WHERE id = ? AND ignoreaction = 0");
+                $getban->execute([$banid]);
+                $bandata = $getban->fetch(PDO::FETCH_ASSOC);
+
+                if($bandata !== false){
+
+                    if($bandata["ignoreaction"] == 1) {
+                        header("Location: /home");
+                    }
+
+                    if($bandata["bantype"] == "warning"){
+
+                        $query = $pdo->prepare("UPDATE bans SET ignoreaction = 1 WHERE id = ?");
+                        $query->execute([$banid]);
+                        header("Location: /home");
+
+                    } elseif($bandata["bantype"] == "tempban"){
+
+                        if(time() > $bandata["expiration"] ){
+                            $query = $pdo->prepare("UPDATE bans SET ignoreaction = 1 WHERE id = ?");
+                            $query->execute([$banid]);
+                            header("Location: /home");
+                        } else {
+                            header("Location: /");
+                            die();
+                        }
+
+                    } else {
+                        header("Location: /");
+                        die();
+                    }
+
+                } else {
+                    header("Location: /");
+                }
+            }
+        });
+
         $router->get('/game/{id}/update', function($id) {
             include("../templates/update-game.php");
         });

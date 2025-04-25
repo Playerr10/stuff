@@ -5,7 +5,7 @@ $auth = new authentication();
 $auth->requiresession();
 $pagebuilder = new pagebuilder;
 $pagebuilder->set_page_name("Admin - Game Manager");
-$pagebuilder->addresource('cssfiles', '/assets/css/admin/index.css?t='. time());
+$pagebuilder->addresource('cssfiles', '/assets/css/admin/index.css');
 $pagebuilder->buildheader();
 ?>
 <div id="main">

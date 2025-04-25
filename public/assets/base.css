@@ -161,7 +161,10 @@ button, .button {
     transition: 0.2s;
 }
 
-.input {
+.input, select {
+    padding: 0px;
+    margin: 0px;
+    color: white; 
     background-color: #4b4b4b;
     border: none;
     padding: 10px;

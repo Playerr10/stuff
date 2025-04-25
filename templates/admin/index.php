@@ -8,7 +8,7 @@ $auth->requiresession();
 $userinfo = $auth->getuserinfo($_COOKIE["watrbxcookie"]);
 $pagebuilder = new pagebuilder;
 $pagebuilder->set_page_name("Admin - Index");
-$pagebuilder->addresource('cssfiles', '/assets/css/admin/index.css?t='. time());
+$pagebuilder->addresource('cssfiles', '/assets/css/admin/index.css');
 $pagebuilder->buildheader();
 ?>
 

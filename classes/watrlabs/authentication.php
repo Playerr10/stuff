@@ -162,16 +162,20 @@ class authentication {
 		    $creator->execute();
 		    $userinfo = $creator->fetch(PDO::FETCH_ASSOC);
 		    
-		    $bancheck = $pdo->prepare('SELECT * FROM `bans` WHERE `userid` = ?'); 
+		    $bancheck = $pdo->prepare('SELECT * FROM `bans` WHERE `userid` = ? AND ignoreaction = 0'); 
 	        $bancheck->execute([$userinfo['id']]);
 	        
 	        if($bancheck->rowCount() > 0){
 	            $baninfo = $bancheck->fetch(PDO::FETCH_ASSOC);
 	            //echo $_SERVER['REQUEST_URI'];
-	            if($_SERVER['REQUEST_URI'] !== "/unapproved?id=" . $baninfo['id']){
-	                header('Location: /unapproved?id=' . $baninfo['id']);
+	            if($_SERVER['REQUEST_URI'] == "/unapproved?id=" . $baninfo['id']){
+	                
+	            } elseif($_SERVER["REQUEST_URI"] == "/account/reactivate?banid=" . $baninfo['id']){
+                    
+                } else {
+                    header('Location: /unapproved?id=' . $baninfo['id']);
 	                die();
-	            }
+                }
 	            http_response_code(403);
 	            //die();
 	        }
@@ -420,7 +424,7 @@ class authentication {
                 exit();
             }
             
-            if (strlen($username) >= 55){
+            if (strlen($username) >= 21){
                 $returnvar = array(
                 'code' => '400',
                 'message' => 'Username is too long.',

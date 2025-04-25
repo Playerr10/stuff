@@ -97,14 +97,12 @@ function setupAdminHandlerRoutes($router) {
 
         $sitefunc = new sitefunctions();
 
-        if(isset($_POST["username"]) && isset($_POST["note"])){
+        if(isset($_POST["username"]) && isset($_POST["note"]) && isset($_POST["bantype"])){
             $baduser = $_POST["username"];
             $note = $_POST["note"];
+            $bantype = $_POST["bantype"];
 
             include(baseurl . "/conn.php");
-
-
-
             $banid = $sitefunc->createjobid();
 
             $checkuser = $pdo->prepare("SELECT id, username FROM users WHERE username = :username");
@@ -114,6 +112,7 @@ function setupAdminHandlerRoutes($router) {
 
             if($baduserinfo !== false){
 
+                $logging = new logging();
                 $userid = $baduserinfo["id"];
                 
                 $auth = new authentication();
@@ -122,17 +121,86 @@ function setupAdminHandlerRoutes($router) {
                 $modid = $modinfo["id"];
                 $moderator = $modinfo["username"];
 
-                $banuser = $pdo->prepare("INSERT INTO bans (id, userid, moderatorid, moderator, reason) VALUES (:banid, :userid, :modid, :moderator, :reason)");
-                $banuser->bindParam(':banid', $banid, PDO::PARAM_STR);
-                $banuser->bindParam(':userid', $userid, PDO::PARAM_INT);
-                $banuser->bindParam(':modid', $modid, PDO::PARAM_INT);
-                $banuser->bindParam(':moderator', $moderator, PDO::PARAM_STR);
-                $banuser->bindParam(':reason', $note, PDO::PARAM_STR);
-                $banuser->execute();
-                $sitefunc->set_message("User ". $baduserinfo["username"] . " was banned.", "info");
+                if($bantype == "warning"){
+
+                    $banuser = $pdo->prepare("INSERT INTO bans (id, userid, moderatorid, moderator, reason, bantype) VALUES (:banid, :userid, :modid, :moderator, :reason, :bantype)");
+                    $banuser->bindParam(':banid', $banid, PDO::PARAM_STR);
+                    $banuser->bindParam(':userid', $userid, PDO::PARAM_INT);
+                    $banuser->bindParam(':modid', $modid, PDO::PARAM_INT);
+                    $banuser->bindParam(':moderator', $moderator, PDO::PARAM_STR);
+                    $banuser->bindParam(':reason', $note, PDO::PARAM_STR);
+                    $banuser->bindParam(':bantype', $bantype, PDO::PARAM_STR);
+                    $banuser->execute();
+                    $sitefunc->set_message("User ". $baduserinfo["username"] . " was warned.", "info");
+                    $logging->logwebhook("User " . $baduserinfo["username"] . " was warned.\n*". $note ."*");
                 
-                $logging = new logging();
-                $logging->logwebhook("User " . $baduserinfo["username"] . " has been struck by the ban hammer!\n*". $note ."*");
+
+                } elseif($bantype == "1day"){
+                    $oneday = time() + 86400;
+                    $banaa = "tempban";
+
+                    $banuser = $pdo->prepare("INSERT INTO bans (id, userid, moderatorid, moderator, reason, bantype, expiration) VALUES (:banid, :userid, :modid, :moderator, :reason, :bantype, :expiration)");
+                    $banuser->bindParam(':banid', $banid, PDO::PARAM_STR);
+                    $banuser->bindParam(':userid', $userid, PDO::PARAM_INT);
+                    $banuser->bindParam(':modid', $modid, PDO::PARAM_INT);
+                    $banuser->bindParam(':moderator', $moderator, PDO::PARAM_STR);
+                    $banuser->bindParam(':reason', $note, PDO::PARAM_STR);
+                    $banuser->bindParam(':bantype', $banaa, PDO::PARAM_STR);
+                    $banuser->bindParam(':expiration', $oneday, PDO::PARAM_STR);
+                    $banuser->execute();
+                    $sitefunc->set_message("User ". $baduserinfo["username"] . " was banned for one day.", "info");
+                    $logging->logwebhook("User " . $baduserinfo["username"] . " has been banned for one day.\n*". $note ."*");
+                } elseif($bantype == "3day"){
+                    $threeday = 86400 * 3;
+
+                    $threedays = time() + $threeday;
+                    $banaa = "tempban";
+
+                    $banuser = $pdo->prepare("INSERT INTO bans (id, userid, moderatorid, moderator, reason, bantype, expiration) VALUES (:banid, :userid, :modid, :moderator, :reason, :bantype, :expiration)");
+                    $banuser->bindParam(':banid', $banid, PDO::PARAM_STR);
+                    $banuser->bindParam(':userid', $userid, PDO::PARAM_INT);
+                    $banuser->bindParam(':modid', $modid, PDO::PARAM_INT);
+                    $banuser->bindParam(':moderator', $moderator, PDO::PARAM_STR);
+                    $banuser->bindParam(':reason', $note, PDO::PARAM_STR);
+                    $banuser->bindParam(':bantype', $banaa, PDO::PARAM_STR);
+                    $banuser->bindParam(':expiration', $oneday, PDO::PARAM_STR);
+                    $banuser->execute();
+                    $sitefunc->set_message("User ". $baduserinfo["username"] . " was banned for 3 days.", "info");
+                    $logging->logwebhook("User " . $baduserinfo["username"] . " has been banned for 3 days.\n*". $note ."*");
+                } elseif($bantype == "7day"){
+                    $threeday = 86400 * 7;
+
+                    $threedays = time() + $threeday;
+
+                    $banaa = "tempban";
+
+                    $banuser = $pdo->prepare("INSERT INTO bans (id, userid, moderatorid, moderator, reason, bantype, expiration) VALUES (:banid, :userid, :modid, :moderator, :reason, :bantype, :expiration)");
+                    $banuser->bindParam(':banid', $banid, PDO::PARAM_STR);
+                    $banuser->bindParam(':userid', $userid, PDO::PARAM_INT);
+                    $banuser->bindParam(':modid', $modid, PDO::PARAM_INT);
+                    $banuser->bindParam(':moderator', $moderator, PDO::PARAM_STR);
+                    $banuser->bindParam(':reason', $note, PDO::PARAM_STR);
+                    $banuser->bindParam(':bantype', $banaa, PDO::PARAM_STR);
+                    $banuser->bindParam(':expiration', $oneday, PDO::PARAM_STR);
+                    $banuser->execute();
+                    $sitefunc->set_message("User ". $baduserinfo["username"] . " was banned for 3 days.", "info");
+                    $logging->logwebhook("User " . $baduserinfo["username"] . " has been banned for 7 days.\n*". $note ."*");
+                } elseif($bantype == "permban"){
+
+                    $banaa = "permban";
+
+                    $banuser = $pdo->prepare("INSERT INTO bans (id, userid, moderatorid, moderator, reason, bantype) VALUES (:banid, :userid, :modid, :moderator, :reason, :bantype)");
+                    $banuser->bindParam(':banid', $banid, PDO::PARAM_STR);
+                    $banuser->bindParam(':userid', $userid, PDO::PARAM_INT);
+                    $banuser->bindParam(':modid', $modid, PDO::PARAM_INT);
+                    $banuser->bindParam(':moderator', $moderator, PDO::PARAM_STR);
+                    $banuser->bindParam(':reason', $note, PDO::PARAM_STR);
+                    $banuser->bindParam(':bantype', $banaa, PDO::PARAM_STR);
+                    $banuser->execute();
+                    $sitefunc->set_message("User ". $baduserinfo["username"] . " was banned for 3 days.", "info");
+                    $logging->logwebhook("User " . $baduserinfo["username"] . " has been struck by the ban hammer!\n*". $note ."*");
+                }
+    
                 header("Location: /admin/banuser");
 
             } else {
