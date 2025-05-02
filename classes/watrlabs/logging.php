@@ -56,7 +56,7 @@ class logging {
                 [
                     "title" => "watrbx - site log", // i fucking hard coded it because php's a piece of shit
                     "type" => "rich",
-                    "description" => "htmlspecialchars($log)",
+                    "description" => htmlspecialchars("$log"),
                     "timestamp" => $timestamp,
                     "color" => hexdec( "007182" ),
                 ]
