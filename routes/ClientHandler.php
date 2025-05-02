@@ -313,8 +313,8 @@ function setupClientHandlerRoutes($router) {
                 
                 if($message == "murdle"){
                     $userid = $cheater["id"];
-                    $getbanned = $pdo->prepare("INSERT INTO bans (id, userid, moderator, reason) VALUES (?, ?, ?, ?)");
-                    $getbanned->execute([$userid, $userid, "System", "Exploiting is not allowed on watrbx! (Cheat Engine Detected)"]);
+                    $getbanned = $pdo->prepare("INSERT INTO bans (id, userid, moderator, reason, bantype) VALUES (?, ?, ?, ?, ?)");
+                    $getbanned->execute([$userid, $userid, "System", "Exploiting is not allowed on watrbx! (Cheat Engine Detected)", "permban"]);
                     $logging->logwebhook("User " . $cheater["username"] . " has been struck by the ban hammer!");
                     
                 }
@@ -765,7 +765,7 @@ function setupClientHandlerRoutes($router) {
             $role = $userinfo["role"];
             
             if($playerid == 2){
-                die("https://www.watrbx.xyz/Asset/BodyColors.ashx?userId=34234234;https://www.watrbx.xyz/asset/?id=398635081;https://www.watrbx.xyz/asset/?id=417457461;https://www.watrbx.xyz/asset/?id=301811279;https://www.watrbx.xyz/asset/?id=98;");
+                die("https://www.watrbx.xyz/Asset/BodyColors.ashx?userId=34234234;https://www.watrbx.xyz/asset/?id=398635081;https://www.watrbx.xyz/asset/?id=417457461;https://www.watrbx.xyz/asset/?id=301811279;https://www.watrbx.xyz/asset/?id=139;");
             }
             
             
@@ -899,6 +899,22 @@ function setupClientHandlerRoutes($router) {
        header("Content-type: text/plain");
        die("true");
         
+    });
+
+    $router->get('/universes/{universe}/game-start-info', function($universe){
+        header("Content-type: application/json");
+
+        if($universe == 138){
+
+            $r15array = array(
+                "r15Morphing"=>true
+            );
+
+            die(json_encode($r15array));
+        } else {
+            die("{}");
+        }
+
     });
 
     $router->get('/Game/PlaceLauncher.ashx', function() {

@@ -12,9 +12,17 @@
     
     $port = $_GET['port'] ?? 53640;
     $place = $_GET['pid'] ?? 1;
+
+	include(baseurl . "/conn.php");
+	$getuniverse = $pdo->prepare("SELECT * FROM universes WHERE placeid = ?");
+    $getuniverse->execute([$place]);
+    $universe = $getuniverse->fetch(PDO::FETCH_ASSOC);
+
+	$universeid = $universe["id"];
+
 ?>
 
-function start(placeId, port, url)
+function start(placeId, port, url, universeid)
 
 apikey = "<?=rccapikey?>"
 
@@ -39,6 +47,7 @@ pcall(function() settings().Network.UseInstancePacketCache = true end)
 pcall(function() settings().Network.UsePhysicsPacketCache = true end)
 --pcall(function() settings()["Task Scheduler"].PriorityMethod = Enum.PriorityMethod.FIFO end)
 pcall(function() settings()["Task Scheduler"].PriorityMethod = Enum.PriorityMethod.AccumulatedError end)
+pcall(function () if universeid ~= nil then game:SetUniverseId(universeid) end end)
 
 --settings().Network.PhysicsSend = 1 -- 1==RoundRobin
 --settings().Network.PhysicsSend = Enum.PhysicsSendMethod.ErrorComputation2
@@ -185,7 +194,7 @@ game:HttpGet("https://www.watrbx.xyz/matchmake/serverstart?jobid=" .. jobid .. "
 
 end
 
-start(<?=$place?>, <?=$port?>, "https://www.watrbx.xyz")
+start(<?=$place?>, <?=$port?>, "https://www.watrbx.xyz", <?=$universeid?>)
 
 while wait(30) do
     if #game:GetService("Players"):GetPlayers() == 0 then

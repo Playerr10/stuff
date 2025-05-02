@@ -786,14 +786,14 @@ function setupWebHandlerRoutes($router) {
                             $referid = $_COOKIE["referer"];
                             
                             $getrefers = $pdo->prepare("SELECT * FROM refers WHERE refername = ?");
-                            $getrefers->execute([$referid]);
+                            $getrefers->execute([$referid, $referid]);
                             $referdata = $getrefers->fetch(PDO::FETCH_ASSOC);
             
                             if($referdata){
                                 $newsignups = $referdata["signups"] + 1;
                                 
-                                $updaterefers = $pdo->prepare("UPDATE refers SET signups = ?");
-                                $updaterefers->execute([$newsignups]);
+                                $updaterefers = $pdo->prepare("UPDATE refers SET signups = ? WHERE refername = ?");
+                                $updaterefers->execute([$newsignups, $referid]);
                             }
                         
                         }
